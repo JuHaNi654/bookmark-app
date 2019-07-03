@@ -1,0 +1,36 @@
+{
+  "name": "memo-app",
+  "version": "0.1.0",
+  "description": "Bookmarking everything",
+  "main": "./src/main.js",
+  "homepage": "./",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "postinstall": "electron-builder install-app-deps",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.juhani.bm-app",
+    "files": [
+      "build/**/*",
+      "./src/main.js",
+      "./src"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+  "author": "Juhani654",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^5.0.4",
+    "electron-builder": "^20.44.4",
+    "electron-rebuild": "^1.8.5"
+  },
+  "dependencies": {
+    "sqlite3": "^4.0.9",
+    "uniqid": "^5.0.3"
+  }
+}

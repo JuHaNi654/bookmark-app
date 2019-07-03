@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+    background-color: silver;
+}
+
+.Header-style {
+    background-color: #ff901f;
+    overflow: hidden;
+    padding: 5px 10px;
+}
+
+.Header-Button {
+    background-color: #ffd319;
+    border: none;
+    height: 30px;
+    margin: 1%;
+    border-radius: 3%;
+    box-shadow: 0px 5px #999;
+    float: left;
+}
+
+.Header-Button:active {
+    box-shadow: 0 0px;
+    transform: translateY(4px);
+}
