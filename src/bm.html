@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="stylesheet" href="./styles/bm.css">
+        <script>
+      if (typeof module === "object") {
+        window.module = module;
+        module = undefined;
+      }
+    </script>
+    <script src="jquery/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script>
+      if (window.module) module = window.module;
+    </script> 
+    <title>BookMark</title>
 </head>
+
 <body>
-    
+    <div id="container" class="container">
+        <div id="title-container">
+            <span class="title-span">Title:</span>
+            <span class="bm-text" id="title"></span>
+        </div>
+        <div onclick="copyLink()" id="url-container">
+            <span class="url-span">Saved-url:</span>
+            <span class="bm-text" id="url"></span>
+        </div>
+        <div id="information-container">
+            <span class="info-span">Information about bookmark:</span>
+            <span class="bm-text" id="info"></span>
+        </div>
+    </div>
 </body>
+<script src="./javascript/Bm.js"></script>
+
 </html>

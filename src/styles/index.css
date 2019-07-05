@@ -75,19 +75,36 @@ input[type="text"] {
     border-color: rgba(255,255,255,1);
 }
 
-.folder-row-style td {
-    font-size: 17px;
-    padding: 5px;
-}
-
 .container table {
     width: 100%;
+}
+
+#folder-table {
+    margin-top: 0.20em;
+    border-collapse: collapse;
+}
+
+#folder-table td {
+    padding: 5px;   
 }
 
 .folder-row-style:hover {
     background-color: #f222ff;
     box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.25);
 }
+
+#folder-table .folder-row-style td:first-child {
+  width: 10%; 
+}
+
+#folder-table .folder-row-style td:nth-child(2) {
+    cursor: pointer;  
+    font-weight: 400; 
+    transition: all 0.2s;
+}
+#folder-table .folder-row-style td:nth-child(2):hover {
+    font-size: 20px;
+} 
 
 .delete-button {
     background-color:#4e9af1;
@@ -108,29 +125,11 @@ input[type="text"] {
 }
 
 
-#folder-table {
-    margin-top: 0.20em;
-    border-collapse: collapse;
-}
-
-#folder-table .folder-row-style td:first-child {
-  width: 10%; 
-}
-
-#folder-table .folder-row-style td:nth-child(2) {
-    cursor: pointer;  
-    font-weight: 400; 
-    transition: all 0.2s;
-}
-#folder-table .folder-row-style td:nth-child(2):hover {
-    font-size: 20px;
-} 
-
-
-
 .selected {
-    visibility: visible;
     transition: 0.75s ease-in-out;
+    font-weight: 800;
+    font-size: 35px;
+    background-color: #ffd319;
 }
 .not-selected {
     visibility: hidden;
@@ -147,18 +146,14 @@ input[type="text"] {
     height: auto;
     text-align: center;
     overflow: auto;
-
     padding: 5px;
     cursor: pointer;  
-
 }
 
 .sub-table-style tr:hover {
     background-color: #4e9af1;
     box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.25);
 }
-
-
 
 .disable-click-event {
     pointer-events: none;
@@ -171,6 +166,8 @@ input[type="text"] {
 .subTable-title:hover{
     font-size: 25px;
 }
+
+
 
 @keyframes fadeIn {
     from {

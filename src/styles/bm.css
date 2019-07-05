@@ -1,25 +1,47 @@
 body {
     margin: 0;
-    background-color: silver;
+    background-color:#800080;
+}
+.container {
+    padding: 10px 0px 10px 0px;
 }
 
-.Header-style {
-    background-color: #ff901f;
-    overflow: hidden;
-    padding: 5px 10px;
+#title-container {
+    padding: 15px;
+    vertical-align:middle;
+    background: linear-gradient(to left, transparent 20%,turquoise 80%) bottom no-repeat;
+    background-size: 200% 4px;  
 }
 
-.Header-Button {
-    background-color: #ffd319;
-    border: none;
-    height: 30px;
-    margin: 1%;
-    border-radius: 3%;
-    box-shadow: 0px 5px #999;
-    float: left;
+
+#url-container {
+    padding: 15px;
+    vertical-align:middle;
+    background: linear-gradient(to left, transparent 20%,turquoise 80%) bottom no-repeat;
+    background-size: 200% 4px;  
+} 
+
+#information-container {
+    padding: 15px;
+    vertical-align:middle;
+    background: linear-gradient(to left, transparent 20%,turquoise 80%) bottom no-repeat;
+    background-size: 200% 4px;  
 }
 
-.Header-Button:active {
-    box-shadow: 0 0px;
-    transform: translateY(4px);
+.title-span, .url-span, .info-span {
+    font-size: 17.5px;
+    font-weight: 550;
+    color: #ffffff;
+}
+.title-span, .url-span {
+    display: inline;
+    margin-right: 7.5px;
+}
+.info-span {
+    display: block;
+}
+.bm-text {
+    font-size: 17.5px;
+    font-weight: 500;
+    color: #ffffff;
 }

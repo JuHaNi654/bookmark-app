@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose()
 let uniqid = require('uniqid')
-
+const ipcRenderer = require('electron').ipcRenderer
 /**
 |--------------------------------------------------
 | @function fetchData is called on onload method on body, 
@@ -52,7 +52,7 @@ function removeFromDatabase(id) {
 |--------------------------------------------------
 */
 function fetchSavedBookmarks(folderId) {
-    return promise = new Promise(function(resolve, reject) {
+    return promise = new Promise(function (resolve, reject) {
         const db = new sqlite3.Database('./database.sqlite3')
         db.all("SELECT * FROM bookmarks where bmFolderId = (?)", [folderId], function (err, rows) {
             if (err) {
@@ -62,7 +62,7 @@ function fetchSavedBookmarks(folderId) {
             }
         });
         db.close();
-    }) 
+    })
 }
 
 /**
@@ -73,9 +73,10 @@ function fetchSavedBookmarks(folderId) {
 */
 function openNewFolderForm() {
     $(document).ready(function () {
-        var options = { queue: false }
-         $("#form").toggle("blind", options, 500)
+        let options = {}
+        $("#form").toggle("blind", options, 500)
     });
+
 }
 
 /**
@@ -99,7 +100,7 @@ function changeHeaderButtonText(text, functionCall) {
 |--------------------------------------------------
 */
 function setTable(data) {
-    for (var i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         newTableRow(data[i].folderId, data[i].folderName)
     }
 }
@@ -139,6 +140,7 @@ function newTableRow(id, title) {
     // insert second cell to the row
     let folderName = row.insertCell(1);
 
+    jQuery(folderName).addClass('folder-title-style')
     // Give id attribute with given id string to the second cell
     folderName.setAttribute("id", id)
     // Given onclick attribute to the second cell with given function
@@ -163,7 +165,7 @@ function createDeleteButton() {
     //Set onclick and class attributes to the button element
     newButton.setAttribute("onclick", "deleteRow(this)")
     newButton.setAttribute("class", "delete-button")
-
+    newButton.setAttribute("id", "delete-button")
     return newButton
 }
 
@@ -199,13 +201,17 @@ function deleteRow(x) {
 */
 function openSubTable(value) {
     // Will get called function parent element and save it to the variable
-    var parentElement = value.parentElement
+    let parentElement = value.parentElement
     // Get selected folder row index position and save it to the variable
-    var rowPosition = parentElement.rowIndex 
+    let rowPosition = parentElement.rowIndex
 
+    let delButton = document.getElementById("delete-button")
+    delButton.style.visibility = "hidden"
     //Set attribute to the selcted row, so it will be easier on the animations and other 
     // specified styles on selected row
     parentElement.setAttribute("id", "selected")
+
+    let rowHeight = parentElement.offsetHeight
 
     // Will disable folder table rows, so that it will be not creating 
     // more than 1 row tables on the showcase
@@ -213,15 +219,19 @@ function openSubTable(value) {
     // disabled onclick event, so other rows cannot be clicked while selected folder animation is executed
     // and set non-selected folders visibility to the hidden
     jQuery("tr:not(#selected)").addClass('not-selected disable-click-event')
-    
+
     // Call function, so that selected folder row can be moved to the top of the table
-    moveTableRow(rowPosition, parentElement.offsetHeight, "selected")
-    //Change header button text and onclick function, so that we can close selected folder 
-    changeHeaderButtonText("Close Folder", "closeOpenFolder()")
-    //Set little timeout on subtable creating function, so that other folder are full hidden
-    setTimeout(function() {
-        createSubTableRow(rowPosition, parentElement.offsetHeight, value.id)
-    }, 1500)
+    moveTableRow(rowPosition, rowHeight, "selected")
+
+    setTimeout( function() {
+        //Set little timeout on subtable creating function, so that other folder are full hidden
+        createSubTableRow(rowPosition, rowHeight, value.id)
+    }, 1000)
+    modifySelectedFolderTitle(parentElement)
+}
+function modifySelectedFolderTitle(x) {
+    let selectedFolderTextStyle = x.childNodes[1]
+    jQuery(selectedFolderTextStyle).addClass('folder-text-style')
 }
 
 
@@ -252,15 +262,32 @@ function createSubTableRow(value, folderHeight, folderId) {
     // Fetch bookmark from database and then create rows from bookmarks and 
     // append to the subtable
     fetchSavedBookmarks(folderId)
-        .then(function(result) {
+        .then(function (result) {
             bookmarkTable.appendChild(constructBookmarkData(result))
         })
-        .catch(function(err) {
+        .catch(function (err) {
             throw new Error(err)
         })
+        .finally(function () {
+            //Change header button text and onclick function, so that we can close selected folder 
+            changeHeaderButtonText("Close Folder", "closeOpenFolder()")
+            document.getElementById("header").appendChild(createNewBmButton())
+        })
     //title.appendChild(createDummyData())
-
     moveTableRow(value, folderHeight, "subTable")
+}
+
+function createNewBmButton() {
+    // Create new button element
+    let newButton = document.createElement("button");
+    // Set button text value
+    newButton.innerText = "Create new bookmark"
+
+    //Set onclick and class attributes to the button element
+    newButton.setAttribute("onclick", "")
+    newButton.setAttribute("id", "new-bm-button")
+    newButton.setAttribute("class", "Header-Button")
+    return newButton
 }
 
 /**
@@ -271,15 +298,21 @@ function createSubTableRow(value, folderHeight, folderId) {
 */
 function closeOpenFolder() {
     let selected = document.getElementById("selected")
-    selected.removeAttribute("style")
+    let delButton = document.getElementById("delete-button")
 
-    jQuery("tr").removeClass('not-selected disable-click-event')
+    selected.removeAttribute("style")
     jQuery("#subTable").remove()
+    jQuery("#new-bm-button").remove()
+    jQuery("tr").removeClass('not-selected ')
 
     setTimeout(function () {
         jQuery(selected).removeClass('selected disable-click-event')
+        jQuery("tr").removeClass('disable-click-event')
+        delButton.removeAttribute('style')
         selected.removeAttribute("id")
+
     }, 1000)
+
     changeHeaderButtonText("+ New Folder", "openNewFolderForm()")
 }
 
@@ -327,20 +360,25 @@ function constructBookmarkData(list) {
         row.setAttribute("id", list[i].bmId)
         let cell = row.insertCell(0)
         cell.setAttribute("class", "subTable-title")
-        cell.setAttribute("onclick", "showMore(this)")
+        cell.setAttribute("onclick", "openBookMarkWindow(this)")
         cell.innerText = list[i].title
     }
     return table
-}   
+}
 
 //Dummy data, which tested will subtable work
+/*
 function createDummyData() {
-    var table = document.createElement("table");
+    let table = document.createElement("table");
     for (let i = 0 ; i < 25; i++) {
         let row = table.insertRow(i)
         let cell = row.insertCell(0)
         cell.innerText = i
     }
     return table
-}
+}*/
 
+function openBookMarkWindow(x) {
+    let selectedBookmarkId = x.parentElement.id
+    ipcRenderer.send('receive-and-send-bookmark-id', selectedBookmarkId)
+}
