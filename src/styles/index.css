@@ -129,7 +129,6 @@ input[type="text"] {
     transition: 0.75s ease-in-out;
     font-weight: 800;
     font-size: 35px;
-    background-color: #ffd319;
 }
 .not-selected {
     visibility: hidden;
@@ -159,12 +158,12 @@ input[type="text"] {
     pointer-events: none;
 }
 .subTable-title {
-    font-weight: 400; 
+    font-weight: 500; 
     transition: all 0.2s;
-    font-size: 17px;
+    font-size: 25px;
 }
 .subTable-title:hover{
-    font-size: 25px;
+    font-size: 30px;
 }
 
 

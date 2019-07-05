@@ -3,7 +3,7 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 // Application Window Variables
 let win
 let bookmarkWindow
-
+let newBookmarkWindow
 /**
 |--------------------------------------------------
 | function called when application started
@@ -33,9 +33,20 @@ function createWindow() {
         }
     })
 
+    newBookmarkWindow = new BrowserWindow({
+        width: 400,
+        height: 380,
+        parent: win,
+        show: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+
     // load selected html file on the main window
     win.loadFile('./src/index.html')
     bookmarkWindow.loadFile('./src/bm.html')
+    newBookmarkWindow.loadFile('./src/newbookmark.html')
     // Open the DevTools.
     win.webContents.openDevTools()
 
@@ -58,6 +69,12 @@ function createWindow() {
         bookmarkWindow.hide()
     })
 
+    newBookmarkWindow.on('close', (e) => {
+        e.preventDefault()
+        newBookmarkWindow.hide()
+    })
+
+
 }
 
 // Function called when electron finnished initializing
@@ -67,6 +84,7 @@ app.on('ready', createWindow)
 app.on('window-all-closed', () => {
     win = null
     bookmarkWindow = null
+    newBookmarkWindow = null
     // Shutdown process on mac
     if (process.platform !== 'darwin') {
         app.quit()
@@ -80,6 +98,12 @@ app.on('activate', () => {
     }
 })
 
+
+ipcMain.on('open-new-bookmark-window', (event, arg) => {
+    console.log(arg)
+    newBookmarkWindow.webContents.send('open-window-with-folderid', arg)
+    newBookmarkWindow.show()
+})
 
 
 ipcMain.on('receive-and-send-bookmark-id', (event, arg) => {

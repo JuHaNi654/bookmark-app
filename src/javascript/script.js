@@ -205,7 +205,7 @@ function openSubTable(value) {
     // Get selected folder row index position and save it to the variable
     let rowPosition = parentElement.rowIndex
 
-    let delButton = document.getElementById("delete-button")
+    let delButton = parentElement.childNodes[0]
     delButton.style.visibility = "hidden"
     //Set attribute to the selcted row, so it will be easier on the animations and other 
     // specified styles on selected row
@@ -227,12 +227,9 @@ function openSubTable(value) {
         //Set little timeout on subtable creating function, so that other folder are full hidden
         createSubTableRow(rowPosition, rowHeight, value.id)
     }, 1000)
-    modifySelectedFolderTitle(parentElement)
+
 }
-function modifySelectedFolderTitle(x) {
-    let selectedFolderTextStyle = x.childNodes[1]
-    jQuery(selectedFolderTextStyle).addClass('folder-text-style')
-}
+
 
 
 /**
@@ -284,7 +281,7 @@ function createNewBmButton() {
     newButton.innerText = "Create new bookmark"
 
     //Set onclick and class attributes to the button element
-    newButton.setAttribute("onclick", "")
+    newButton.setAttribute("onclick", "openCreateNewBmWindow()")
     newButton.setAttribute("id", "new-bm-button")
     newButton.setAttribute("class", "Header-Button")
     return newButton
@@ -298,7 +295,7 @@ function createNewBmButton() {
 */
 function closeOpenFolder() {
     let selected = document.getElementById("selected")
-    let delButton = document.getElementById("delete-button")
+    let delButton = selected.childNodes[0]
 
     selected.removeAttribute("style")
     jQuery("#subTable").remove()
@@ -381,4 +378,9 @@ function createDummyData() {
 function openBookMarkWindow(x) {
     let selectedBookmarkId = x.parentElement.id
     ipcRenderer.send('receive-and-send-bookmark-id', selectedBookmarkId)
+}
+
+function openCreateNewBmWindow() {
+    let selectedFolderId = document.getElementById("selected").childNodes[1].id
+    ipcRenderer.send('open-new-bookmark-window', selectedFolderId)
 }
